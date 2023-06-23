@@ -30,6 +30,7 @@
 
 // set tốc độ động cơ
 #define SPD_FAST 2047
+#define MAX_SPD 4095
 
 #define PWM_SERVO0          2
 #define PWM_SERVO1          3
@@ -150,5 +151,8 @@ void loop() {
         wheel = !wheel;
         ctrl_servo360(SRV_WHEEL, (wheel) ? SPD_WHEEL : 0);
     } else wheel_toggle = false;
+    }
+    if(ps2.Button(PSB_BLUE)){
+      ctrl_dc(SHOOTER_1, MAX_SPD)
     }
 }
