@@ -73,10 +73,6 @@ void setup() {  //Hàm set up chạy khởi tạo một lần khi khởi động
   pwm.setOscillatorFrequency(27000000);  //Đặt tần số xung trong PCA9685 là 27000000 (27MHz) (27 triệu)
   pwm.setPWMFreq(50);                    //Đặt tần số giao động trên chân tối đa 50Hz (Để dùng cho cả Servo) (Pulse Width Modulation)
 }
-  bool intake_toggle = false;
-  bool wheel_toggle = false;
-  bool intake = false;
-  bool wheel = false;
 
 void ctrl_dc(uint8_t motor, int16_t speed) {
   switch (motor) {
@@ -127,6 +123,10 @@ void ctrl_servo360(uint8_t motor, float speed) {
   }
 }
 
+bool intake_toggle = false;
+bool wheel_toggle = false;
+bool intake = false;
+bool wheel = false; 
 
 void loop() {
     // put your main code here, to run repeatedly: 
@@ -137,20 +137,17 @@ void loop() {
     ctrl_dc(MOT_RIGHT, map(ps2.Analog(PSS_RY), 0, 255, SPD_FAST, -SPD_FAST));
 
     //Hàm mẫu để sử dụng Servo 
-    if (ps2.Button(PSB_R1)){
-      if(intake_toggled == false) {
-        intake_toggled = true;
+  if (ps2.Button(PSB_R1)){
+      if(!intake_toggle) {
+        intake_toggle = true;
         intake = !intake;
         ctrl_servo360(SRV_INTAKE, (intake) ?  SPD_INTAKE : 0);
-    } else intake_toggle = false;
-    }
+    } else {intake_toggle = false;}}
 
-    if (ps2.Button(PSB_R2)){
-      if(wheel_toggle == false){
+  if (ps2.Button(PSB_R1)){
+      if(!wheel_toggle) {
         wheel_toggle = true;
         wheel = !wheel;
-        ctrl_servo360(SRV_WHEEL, (wheel) ? SPD_WHEEL : 0);
-    } else wheel_toggle = false;
-    }
-    
+        ctrl_servo360(SRV_WHEEL, (wheel) ?  SPD_WHEEL : 0);}
+    } else {wheel_toggle = false;}}
 }
