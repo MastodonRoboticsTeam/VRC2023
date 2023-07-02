@@ -14,29 +14,30 @@
 //Kênh PWM cho chân thuận (Tay phải)
 #define PWM_DC1A 14
 #define PWM_DC1B 15
-#define PWM_DC4A 12
-#define PWM_DC4B 13
+#define PWM_DC4A 8
+#define PWM_DC4B 9
 
 //Kenh PWM cho chân ngược (Tay trái)
-#define PWM_DC2A 8
-#define PWM_DC2B 9
-#define PWM_DC3A 10
-#define PWM_DC3B 11
+#define PWM_DC2A 10
+#define PWM_DC2B 11
+#define PWM_DC3A 12
+#define PWM_DC3B 13
 
 // Động cơ DC
 #define MOT_LEFT 1
-#define MOT_RIGHT 2
+#define MOT_RIGHT 4
 #define SHOOTER_1 3
 
 // set tốc độ động cơ
 #define SPD_FAST 2047
+#define MAX_SPD 4095
 
-#define PWM_SERVO0          8
-#define PWM_SERVO1          9
-#define PWM_SERVO2          10
-#define PWM_SERVO3          11
-#define PWM_SERVO4          12
-
+#define PWM_SERVO0          2
+#define PWM_SERVO1          3
+#define PWM_SERVO2          4
+#define PWM_SERVO3          5
+#define PWM_SERVO4          6
+#define PWM_SERVO5          7
 // Độ rộng xung cho servo 360 (đã calibrate)
 #define SRV_360_T1          698 // độ rộng xung mà tại đó servo quay nhanh nhất theo 1 chiều
 #define SRV_360_T2          1362 // biên dưới của khoảng servo dừng quay
@@ -44,8 +45,8 @@
 #define SRV_360_T4          2104 // độ rộng xung mà tại đó servo quay nhanh nhất theo chiều còn lại
 
 // Cổng của servo
-#define SRV_INTAKE          0
-#define SRV_WHEEL           1
+#define SRV_INTAKE          7
+#define SRV_WHEEL           6
 
 // Tốc độ động cơ
 #define SPD_INTAKE          100 // servo
@@ -72,10 +73,6 @@ void setup() {  //Hàm set up chạy khởi tạo một lần khi khởi động
   pwm.setOscillatorFrequency(27000000);  //Đặt tần số xung trong PCA9685 là 27000000 (27MHz) (27 triệu)
   pwm.setPWMFreq(50);                    //Đặt tần số giao động trên chân tối đa 50Hz (Để dùng cho cả Servo) (Pulse Width Modulation)
 }
-  bool intake_toggle = false;
-  bool wheel_toggle = false;
-  bool intake = false;
-  bool wheel = false;
 
 void ctrl_dc(uint8_t motor, int16_t speed) {
   switch (motor) {
@@ -126,6 +123,10 @@ void ctrl_servo360(uint8_t motor, float speed) {
   }
 }
 
+bool intake_toggle = false;
+bool wheel_toggle = false;
+bool intake = false;
+bool wheel = false; 
 
 void loop() {
     // put your main code here, to run repeatedly: 
@@ -136,18 +137,17 @@ void loop() {
     ctrl_dc(MOT_RIGHT, map(ps2.Analog(PSS_RY), 0, 255, SPD_FAST, -SPD_FAST));
 
     //Hàm mẫu để sử dụng Servo 
-    if (ps2.Button(PSB_R1)){
-      if(!intake_toggled) {
-        intake_toggled = true;
+  if (ps2.Button(PSB_R1)){
+      if(!intake_toggle) {
+        intake_toggle = true;
         intake = !intake;
         ctrl_servo360(SRV_INTAKE, (intake) ?  SPD_INTAKE : 0);
-    } else intake_toggle = false;
+    } else {intake_toggle = false;}}
 
-    if (ps2.Button(PSB_R2)){
-      if(wheel_toggle) = true;
+  if (ps2.Button(PSB_R1)){
+      if(!wheel_toggle) {
+        wheel_toggle = true;
         wheel = !wheel;
-        ctrl_servo360(SRV_WHEEL, (wheel) ? SPD_WHEEL : 0);
-    } else wheel_toggle = false;
-     
-}
+        ctrl_servo360(SRV_WHEEL, (wheel) ?  SPD_WHEEL : 0);}
+    } else {wheel_toggle = false;}}
 }
