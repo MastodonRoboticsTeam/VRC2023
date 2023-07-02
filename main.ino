@@ -12,10 +12,10 @@
 
 // Kênh PWM (Chân của các servo và DC motor) điều khiển động cơ (Số chân của động cơ DC hay servo đều gấp đôi số kênh của động cơ đó) (Nếu vẫn sai chân thì invert lại)
 //Kênh PWM cho chân thuận (Tay phải)
-#define PWM_DC1A 8
-#define PWM_DC1B 9
-#define PWM_DC4A 14
-#define PWM_DC4B 15
+#define PWM_DC1A 14
+#define PWM_DC1B 15
+#define PWM_DC4A 8
+#define PWM_DC4B 9
 
 //Kenh PWM cho chân ngược (Tay trái)
 #define PWM_DC2A 10
@@ -152,7 +152,5 @@ void loop() {
         ctrl_servo360(SRV_WHEEL, (wheel) ? SPD_WHEEL : 0);
     } else wheel_toggle = false;
     }
-    if(ps2.Button(PSB_BLUE)){
-      ctrl_dc(SHOOTER_1, MAX_SPD)
-    }
+    
 }
